@@ -1,5 +1,5 @@
 // App.js
-import React, { useState } from 'react';
+import React, { useState, lazy, Suspense } from 'react';
 import { View, Text, TextInput, Button } from 'react-native';
 import { Provider } from 'react-redux';
 import { createStore } from 'redux';
@@ -19,6 +19,8 @@ const reducer = (state = initialState, action) => {
 
 const store = createStore(reducer);
 
+const LazyExpenseList = lazy(() => import('./ExpenseList'));
+
 const App = () => {
   const [name, setName] = useState('');
   const [amount, setAmount] = useState('');
@@ -37,6 +39,9 @@ const App = () => {
         <TextInput placeholder="Name" value={name} onChangeText={setName} />
         <TextInput placeholder="Amount" value={amount} onChangeText={setAmount} keyboardType="numeric" />
         <Button title="Add Expense" onPress={handleSubmit} />
+        <Suspense fallback={<Text>Loading...</Text>}>
+          <LazyExpenseList />
+        </Suspense>
       </View>
     </Provider>
   );
